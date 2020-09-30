@@ -34,7 +34,7 @@ func (k keyRepoInstrumentedImpl) AddKey(key *models.Key) RepositoryResult {
 
 func (k keyRepoInstrumentedImpl) GetKeyByKey(kname string) RepositoryResult {
 	var key models.Key
-	res := k.db.Where("name = ?", kname).Find(&key)
+	res := k.db.Where("name = ?", kname).Preload("Values").Find(&key)
 	return RepositoryResult{
 		Value:        res.Value,
 		Error:        res.Error,

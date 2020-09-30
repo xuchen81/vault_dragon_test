@@ -60,6 +60,7 @@ func main() {
 		fmt.Fprintf(w, "Welcome to the home page!!")
 	})
 	r.HandleFunc("/object", controllers.CreateKeyValueHandler).Methods("POST")
+	r.HandleFunc("/object/{keyname}", controllers.GetKeyValueHandler).Methods("Get")
 
 	n := negroni.Classic() // Includes some default middlewares
 	n.UseHandler(r)

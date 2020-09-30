@@ -9,6 +9,7 @@ import (
 	"vault_dragon_test/repositories"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
 	"vault_dragon_test/models"
@@ -37,8 +38,6 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	check := repositories.KeyRepo.GetKeyByKey(key)
-
-	fmt.Println("============", errors.Is(check.Error, gorm.ErrRecordNotFound))
 	if check.Error != nil && !errors.Is(check.Error, gorm.ErrRecordNotFound) {
 		utils.JSONResponse(http.StatusOK, gin.H{
 			"error": check.Error.Error(),
@@ -94,5 +93,25 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 		"key":       createdKey.Name,
 		"value":     createdKey.Values[0].Name,
 		"timestamp": createdKey.CreatedAt.Unix(),
+	}, w)
+}
+
+func GetKeyValueHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	fmt.Println(params)
+	keyName := params["keyname"]
+	fmt.Println(keyName)
+
+	res := repositories.KeyRepo.GetKeyByKey(keyName)
+
+	if res.Error != nil {
+		utils.JSONResponse(http.StatusOK, gin.H{
+			"error": res.Error.Error(),
+		}, w)
+		return
+	}
+	key := res.Value.(*models.Key)
+	utils.JSONResponse(http.StatusOK, gin.H{
+		"value": key.Values[len(key.Values)-1].Name,
 	}, w)
 }
