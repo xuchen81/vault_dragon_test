@@ -35,7 +35,6 @@ func (v valueRepoInstrumentedImpl) AddValue(value *models.Value) RepositoryResul
 }
 
 func (v valueRepoInstrumentedImpl) GetLatestValueByKeyBefore(key string, t time.Time) RepositoryResult {
-
 	var value models.Value
 	res := v.db.Table("dragon_values").Joins("left join dragon_keys on dragon_values.key_id = dragon_keys.id").Where(
 		"dragon_keys.name = ?", key,

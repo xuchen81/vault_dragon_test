@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"vault_dragon_test/repositories"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 
 	"vault_dragon_test/models"
+	"vault_dragon_test/repositories"
 	"vault_dragon_test/utils"
 )
 

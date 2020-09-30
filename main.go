@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"vault_dragon_test/controllers"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
 	"github.com/urfave/negroni"
 
 	"vault_dragon_test/config"
+	"vault_dragon_test/controllers"
 	"vault_dragon_test/database"
 	"vault_dragon_test/models"
 	"vault_dragon_test/repositories"
@@ -42,9 +42,7 @@ func initDBClient() error {
 	// migration
 	database.Client.AutoMigrate(&models.Key{})
 	database.Client.AutoMigrate(&models.Value{})
-
 	return nil
-
 }
 
 func main() {
@@ -66,5 +64,4 @@ func main() {
 	n.UseHandler(r)
 
 	http.ListenAndServe(":3000", n)
-
 }
