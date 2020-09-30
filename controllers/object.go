@@ -5,6 +5,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 	"vault_dragon_test/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -98,16 +100,26 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 func GetKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	keyName := params["keyname"]
-	res := repositories.KeyRepo.GetKeyByKey(keyName)
+	timestamp := r.URL.Query().Get("timestamp")
 
+	var timeBy time.Time
+	// if timestamp is not specified, use current time
+	if timestamp == "" {
+		timeBy = time.Now().UTC()
+	} else {
+		timestampInt, _ := strconv.ParseInt(timestamp, 10, 64)
+		timeBy = time.Unix(timestampInt, 0)
+	}
+
+	res := repositories.ValueRepo.GetLatestValueByKeyBefore(keyName, timeBy)
 	if res.Error != nil {
 		utils.JSONResponse(http.StatusOK, gin.H{
 			"error": res.Error.Error(),
 		}, w)
 		return
 	}
-	key := res.Value.(*models.Key)
+	v := res.Value.(*models.Value)
 	utils.JSONResponse(http.StatusOK, gin.H{
-		"value": key.Values[len(key.Values)-1].Name,
+		"value": v.Name,
 	}, w)
 }

@@ -22,7 +22,7 @@ func InitDBClient(dbUser string, dbPassword string, dbName string) (*gorm.DB, er
 	)
 
 	db, err := gorm.Open("mysql", connectionString)
-
+	db.LogMode(true)
 	Client = db
 	return db, err
 }
