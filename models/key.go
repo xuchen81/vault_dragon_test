@@ -8,7 +8,7 @@ import (
 type Key struct {
 	gorm.Model
 
-	Key    string  `gorm:"size:255;unique" json:"key"`
+	Name   string  `gorm:"size:255;unique" json:"name"`
 	Values []Value `json:"values"`
 }
 

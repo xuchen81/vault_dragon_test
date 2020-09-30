@@ -22,8 +22,8 @@ func NewValueRepoInterface(db *gorm.DB) ValueRepoInterface {
 	}
 }
 
-func (u valueRepoInstrumentedImpl) AddValue(Value *models.Value) RepositoryResult {
-	res := u.db.Save(Value)
+func (v valueRepoInstrumentedImpl) AddValue(value *models.Value) RepositoryResult {
+	res := v.db.Save(value)
 	return RepositoryResult{
 		Value:        res.Value,
 		Error:        res.Error,

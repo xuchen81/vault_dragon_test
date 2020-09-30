@@ -8,4 +8,5 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/spf13/viper v1.7.1
 	github.com/urfave/negroni v1.0.0
+	gorm.io/gorm v1.20.2
 )

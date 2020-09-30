@@ -2,11 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"vault_dragon_test/repositories"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 
 	"vault_dragon_test/models"
 	"vault_dragon_test/utils"
@@ -27,18 +30,57 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var res repositories.RepositoryResult
-	for key, value := range KVmapping {
-		values := []models.Value{
-			{
-				Value: value,
-			},
-		}
-		k := models.Key{
-			Key:    key,
-			Values: values,
-		}
-		res = repositories.KeyRepo.AddKey(&k)
+	var key, value string
+	for k, v := range KVmapping {
+		key = k
+		value = v
 	}
+
+	check := repositories.KeyRepo.GetKeyByKey(key)
+
+	fmt.Println("============", errors.Is(check.Error, gorm.ErrRecordNotFound))
+	if check.Error != nil && !errors.Is(check.Error, gorm.ErrRecordNotFound) {
+		utils.JSONResponse(http.StatusOK, gin.H{
+			"error": check.Error.Error(),
+		}, w)
+		return
+	}
+	// it the key is found, add a new value
+	if check.RowsAffected == 1 {
+		found := check.Value.(*models.Key)
+		res := repositories.ValueRepo.AddValue(&models.Value{
+			Name:  value,
+			KeyID: found.ID,
+		})
+
+		if res.Error != nil {
+			utils.JSONResponse(http.StatusOK, gin.H{
+				"error": check.Error.Error(),
+			}, w)
+			return
+		}
+
+		newValue := res.Value.(*models.Value)
+
+		utils.JSONResponse(http.StatusOK, gin.H{
+			"key":       key,
+			"value":     newValue.Name,
+			"timestamp": newValue.CreatedAt.Unix(),
+		}, w)
+		return
+	}
+
+	// if the key does not exist, create it
+	values := []models.Value{
+		{
+			Name: value,
+		},
+	}
+	k := models.Key{
+		Name:   key,
+		Values: values,
+	}
+	res = repositories.KeyRepo.AddKey(&k)
 
 	if res.Error != nil {
 		utils.JSONResponse(http.StatusOK, gin.H{
@@ -49,8 +91,8 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 	createdKey := res.Value.(*models.Key)
 
 	utils.JSONResponse(http.StatusOK, gin.H{
-		"key":       createdKey.Key,
-		"value":     createdKey.Values[0].Value,
+		"key":       createdKey.Name,
+		"value":     createdKey.Values[0].Name,
 		"timestamp": createdKey.CreatedAt.Unix(),
 	}, w)
 }
