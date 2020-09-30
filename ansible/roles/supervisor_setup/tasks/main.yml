@@ -1,0 +1,3 @@
+---
+- include: install_supervisor.yml
+- include: setup_conf.yml

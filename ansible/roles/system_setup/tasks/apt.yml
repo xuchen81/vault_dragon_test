@@ -1,0 +1,29 @@
+---
+- name: Update apt cache.
+  apt: update_cache=yes
+  become: yes
+
+- name: Install apt packages.
+  apt:
+    pkg:
+      - python3-pip
+      - libssl-dev
+      - openssl
+      - build-essential
+      - libmysqlclient-dev
+      - libncurses5-dev
+      - python-dev
+      - python3-pymysql
+      - libxml2-dev
+      - libxslt1-dev
+      - libbz2-dev
+      - libffi-dev
+      - swig
+      - libjpeg-dev
+      - libjpeg8-dev
+      - ntp
+      - unzip
+      - cmake
+      - pkg-config
+    state: present
+  become: yes

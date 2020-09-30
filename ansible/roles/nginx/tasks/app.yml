@@ -1,0 +1,11 @@
+---
+- name: Make sure supervisor folder exists.
+  file: path={{ item.d }} state=directory
+  with_items:
+    - { d: "/etc/supervisor" }
+    - { d: "/etc/supervisor/conf.d" }
+  become: yes
+
+- name: Copy go web app conf file for supervisord to use.
+  template: src=supervisor_go_app.conf dest=/etc/supervisor/conf.d
+  become: yes

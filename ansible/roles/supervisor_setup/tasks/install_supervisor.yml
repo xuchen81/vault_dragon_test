@@ -1,0 +1,11 @@
+---
+- name: Install supervisor.
+  pip: 
+    name: "{{ item.name }}"
+    executable: /usr/bin/pip3 
+    extra_args: -i https://pypi.douban.com/simple
+  with_items:
+    - { name: "supervisor==4.2.1" }
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

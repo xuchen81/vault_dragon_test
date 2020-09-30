@@ -1,0 +1,6 @@
+env: local
+
+database:
+  db_user: root
+  db_password: password
+  db_name: vaultdragon

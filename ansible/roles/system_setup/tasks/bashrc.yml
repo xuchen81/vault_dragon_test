@@ -1,0 +1,4 @@
+---
+- name: Copy custom .bashrc.
+  template: src=bashrc dest=/home/{{user}}/.bashrc
+  become: yes

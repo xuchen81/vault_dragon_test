@@ -1,0 +1,5 @@
+---
+- include: apt_source.yml
+- include: file_structure.yml
+- include: bashrc.yml
+- include: apt.yml

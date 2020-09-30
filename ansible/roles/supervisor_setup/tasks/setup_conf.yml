@@ -1,0 +1,23 @@
+---
+- name: Make sure supervisor folder exists.
+  file: path={{ item.d }} state=directory
+  with_items:
+    - { d: "/etc/supervisor" }
+    - { d: "/etc/supervisor/conf.d" }
+  become: yes
+
+- name: Copy supervisord.conf file to /etc.
+  copy: src=supervisord.conf dest=/etc/supervisor/supervisord.conf mode=0755
+  become: yes
+
+- name: Run supervisor on start.
+  template: src=supervisord_init.sh dest=/etc/init.d/supervisord mode=0755
+  become: yes
+
+- name: Automatically schedule supervisor.
+  shell: update-rc.d supervisord defaults
+  become: yes
+
+- name: Restart Supervisord.
+  service: name=supervisord state=restarted
+  become: yes

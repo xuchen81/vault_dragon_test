@@ -1,0 +1,4 @@
+---
+- name: Copy sources.list to /etc/apt/
+  template: src=20sourceslist dest=/etc/apt/sources.list
+  become: yes

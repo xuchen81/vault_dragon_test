@@ -1,0 +1,2 @@
+[webservers]
+local.vaultdragon.com ansible_port=2209 ansible_host=localhost

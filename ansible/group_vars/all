@@ -1,0 +1,15 @@
+project: "vaultdragon"
+domain: "vaultdragon.com"
+
+node_version: "12.14.1"
+node_dir: "/usr/local/lib/nodejs"
+node_home: "{{ node_dir }}/node-v{{ node_version }}-linux-x64"
+node_bin: "{{ node_home }}/bin"
+
+
+log_dir: "/var/log/{{project}}"
+app_log: "{{log_dir}}/{{project}}.log"
+app_error_log: "{{log_dir}}/error.log"
+
+redis_version: "6.0.6"
+redis_port: 6379

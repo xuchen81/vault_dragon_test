@@ -1,0 +1,12 @@
+---
+- name: Create {{project}} directory structure.
+  file: path={{ item.d }} state=directory owner={{ item.o|default('root') }} group={{ item.g|default('root') }} mode={{ item.m|default('0755') }}
+  with_items:
+    - { d: "{{log_dir}}" }
+  become: yes
+
+- name: Create log files.
+  file: path={{ item.d }} state=touch owner={{ item.o|default('root') }} group={{ item.g|default('root') }}
+  with_items:
+    - { d: "{{redis_log}}" , o: "{{ user }}", g: "{{ user }}" }
+  become: yes

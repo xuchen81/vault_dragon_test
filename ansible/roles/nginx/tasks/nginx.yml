@@ -1,0 +1,36 @@
+---
+- name: Ensure NGINX user exists and is in main user's group.
+  user: name=nginx state=present groups={{user}} append=true shell=/usr/sbin/nologin
+  become: yes
+
+- name: Install latest version of NGINX.
+  apt: name=nginx state=latest
+  become: yes
+
+- name: Copy NGINX config.
+  template: src=nginx.conf dest=/etc/nginx/
+  become: yes
+
+- name: Copy NGINX server config.
+  template: src=app_nginx.conf dest=/etc/nginx/sites-enabled/
+  become: yes
+
+- name: Copy SSL cert.
+  copy: src=certs/{{domain}}/server.crt dest=/etc/nginx/ force=true
+  become: yes
+
+- name: Copy SSL key.
+  copy: src=certs/{{domain}}/server.key dest=/etc/nginx/ force=true
+  become: yes
+
+- name: Remove default NGINX server config.
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  become: yes
+
+- name: Change Nginx timezone.
+  lineinfile: dest=/etc/init.d/nginx insertafter="#!/bin/sh" state=present line="export TZ=Asia/Shanghai"
+  become: yes
+
+- name: Automatically schedule nginx.
+  shell: update-rc.d nginx defaults
+  become: yes
