@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"vault_dragon_test/repositories"
@@ -98,10 +97,7 @@ func CreateKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetKeyValueHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	fmt.Println(params)
 	keyName := params["keyname"]
-	fmt.Println(keyName)
-
 	res := repositories.KeyRepo.GetKeyByKey(keyName)
 
 	if res.Error != nil {
